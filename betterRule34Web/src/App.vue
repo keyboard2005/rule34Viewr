@@ -41,6 +41,9 @@
       <div class="loading" v-if="loading">
         <div class="i"></div>
       </div>
+      <div class="isend" v-if="isEnd">
+        <span>没有更多了</span>
+      </div>
       <div class="back-top">
         <button @click="backTop">Back Top</button>
       </div>
@@ -57,19 +60,19 @@
       <div class="tag-group" v-if="viewInfo.tags.Artist">
         Artist
         <ul>
-          <li v-for="tag in viewInfo.tags.Artist">{{ tag.tag }}</li>
+          <li v-for="tag in viewInfo.tags.Artist" @click="clickTag(tag.tag)">{{ tag.tag }}</li>
         </ul>
       </div>
       <div class="tag-group" v-if="viewInfo.tags.Character">
         Character
         <ul>
-          <li v-for="tag in viewInfo.tags.Character">{{ tag.tag }}</li>
+          <li v-for="tag in viewInfo.tags.Character" @click="clickTag(tag.tag)">{{ tag.tag }}</li>
         </ul>
       </div>
       <div class="tag-group" v-if="viewInfo.tags.General">
         General
         <ul>
-          <li v-for="tag in viewInfo.tags.General">{{ tag.tag }}</li>
+          <li v-for="tag in viewInfo.tags.General" @click="clickTag(tag.tag)">{{ tag.tag }}</li>
         </ul>
       </div>
     </div>
@@ -148,6 +151,11 @@ const search = () => {
 };
 
 
+const clickTag = (tag) => {
+  // 新开一个页面 打开当前地址 + tag
+  window.open(`?tag=${tag}`);
+};
+
 const tagTypeMap = {
   1: 'Artist',
   0: 'General',
@@ -201,13 +209,32 @@ const openView = async (item) => {
 
 const viewClose = () => {
   viewOpen.value = false;
-  viewInfo.value.file_url = '';
+  viewInfo.value = {
+    file_url: '',
+    tags: {
+      // Artist: [],
+      // General: [],
+      // Character: [],
+      // Species: [],
+      // Meta: [],
+      // 'Copy Right': [],
+    }
+  };
   history.pushState(null, '', `#`);
 };
 
 
+
+
 onMounted(async () => {
-  await getPosts();
+  const query = new URLSearchParams(window.location.search);
+  const tag = query.get('tag');
+  if (tag) {
+    keyword.value = tag;
+    search();
+  } else {
+    getPosts();
+  }
   window.addEventListener("popstate", (event) => {
     if (!back.value) {
       viewClose();
@@ -339,6 +366,15 @@ onMounted(async () => {
           }
         }
       }
+    }
+
+    .isend {
+      width: 100%;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #5252f8;
     }
 
     .back-top {
