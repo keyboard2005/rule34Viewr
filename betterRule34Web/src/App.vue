@@ -401,6 +401,7 @@ onMounted(async () => {
   width: calc(50% - 10px);
   height: auto;
   margin: 2px 5px;
+  // background-color: red;
 
 
   img {
