@@ -119,11 +119,6 @@ const onScroll = () => {
 };
 
 const getPosts = async () => {
-  tags.value = tags.value.concat(bannedTags.value);
-  tags.value = tags.value.concat(sort.value === 'newest' ? [''] : ['sort:score:desc']);
-  tags.value = tags.value.concat(type.value === 'video' ? ['video', 'sound'] : ['-video']);
-  tags.value = tags.value.filter((tag) => tag !== '');
-
   const newPosts = await getPostsApi(page.value, pageSize.value, tags.value, type.value);
   if (newPosts.length === 0) {
     isEnd.value = true;
@@ -147,6 +142,10 @@ const search = () => {
   isEnd.value = false;
   loading.value = true;
   tags.value = keyword.value.split(' ');
+  tags.value = tags.value.concat(bannedTags.value);
+  tags.value = tags.value.concat(sort.value === 'newest' ? [''] : ['sort:score:desc']);
+  tags.value = tags.value.concat(type.value === 'video' ? ['sound'] : ['-video']);
+  tags.value = tags.value.filter((tag) => tag !== '');
   getPosts();
 };
 
@@ -233,6 +232,12 @@ onMounted(async () => {
     keyword.value = tag;
     search();
   } else {
+
+    tags.value = tags.value.concat(bannedTags.value);
+    tags.value = tags.value.concat(sort.value === 'newest' ? [''] : ['sort:score:desc']);
+    tags.value = tags.value.concat(type.value === 'video' ? ['sound'] : ['-video']);
+    tags.value = tags.value.filter((tag) => tag !== '');
+
     getPosts();
   }
   window.addEventListener("popstate", (event) => {
@@ -446,6 +451,7 @@ onMounted(async () => {
   video {
     width: 90%;
     height: auto;
+    max-height: 60%;
     border-radius: 5px;
   }
 
