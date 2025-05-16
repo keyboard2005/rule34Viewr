@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const getPostsApi = async (page, pageSize, tags) => {
     tags = tags.join("+");
-    const response = await axios.get(`https://api.rule34.xxx/index.php?json=1&limit=${pageSize}&page=dapi&s=post&q=index&pid=${(page - 1) * pageSize}&tags=${tags}`);
+    const response = await axios.get(`https://api.rule34.xxx/index.php?json=1&limit=${pageSize}&page=dapi&s=post&q=index&pid=${page}&tags=${tags}`);
     return response.data;
 }
 
